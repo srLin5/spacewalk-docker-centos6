@@ -39,7 +39,7 @@ RUN yum clean all
 # ADD conf/supervisord.conf /etc/supervisord.d/supervisord.conf
 
 # 5. Install spacewalk initial and running scripts
-RUN 
+
 ADD conf/answer.txt   /opt/answer.txt
 ADD conf/spacewalk.sh /opt/spacewalk.sh
 
