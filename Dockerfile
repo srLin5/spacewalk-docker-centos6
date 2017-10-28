@@ -22,24 +22,29 @@ WORKDIR /opt
 ENV VERSION=2.6-0
 
 # 3. Add the epel, spacewalk, jpackage repository, supervisord
+# No ; yum upgrade -y
 ADD conf/jpackage.repo /etc/yum.repos.d/jpackage.repo
-RUN yum install -y epel-release \
- && yum install -y http://spacewalk.redhat.com/yum/latest/RHEL/6/x86_64/spacewalk-repo-$VERSION.el6.noarch.rpm \
- && yum check-update ; yum upgrade -y \
- && yum install -y spacewalk-setup-postgresql spacewalk-postgresql tomcat-native python-setuptools \
- && yum clean all \
- && easy_install pip && pip install supervisor && pip install --upgrade meld3==0.6.10 && mkdir /etc/supervisord.d \
- && rm -rf /root/.cache
+RUN yum install -y epel-release 
+RUN yum install -y http://spacewalk.redhat.com/yum/latest/RHEL/6/x86_64/spacewalk-repo-$VERSION.el6.noarch.rpm  
+# RUN yum check-update 
+RUN yum update -y  
+RUN yum install -y spacewalk-setup-postgresql spacewalk-postgresql tomcat-native python-setuptools pip easy_install
+RUN yum clean all 
+# RUN easy_install pip 
+# RUN pip install supervisor 
+# RUN pip install --upgrade meld3==0.6.10 
+# RUN mkdir /etc/supervisord.d && rm -rf /root/.cache
 
 # 4. Install supervisord config
-ADD conf/supervisord.conf /etc/supervisord.d/supervisord.conf
+# ADD conf/supervisord.conf /etc/supervisord.d/supervisord.conf
 
 # 5. Install spacewalk initial and running scripts
+RUN 
 ADD conf/answer.txt   /opt/answer.txt
 ADD conf/spacewalk.sh /opt/spacewalk.sh
 
 # 6. Start supervisord
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.d/supervisord.conf"]
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.d/supervisord.conf"]
 
 # System Log
 VOLUME /var/log
